@@ -6,32 +6,32 @@ import jieba
 import wordcloud
 from selenium import webdriver
 
-driver = webdriver.Chrome('chromedriver.exe')
-driver.get("https://music.163.com/#/song?id=548808659")
-def get_comments():
-    driver.switch_to.frame(0)  # contentFrame
-    """页面下拉"""
-    js = "document.documentElement.scrollTop = document.documentElement.scrollHeight"
-    driver.execute_script(js)
-    """解析数据"""
-    divs = driver.find_elements_by_css_selector('.itm')
-    for div in divs:
-        cnt = div.find_element_by_css_selector('.cnt.f-brk').text.replace('\n',' ')
-        cnt = re.findall('：(.*)',cnt)[0]
-        print(cnt)
-        # 数据保存
-        with open('评论.txt',mode='a',encoding='utf-8') as f:
-            f.write(cnt + '\n')
-
-
-get_comments()
-"""点击下一页"""
-while driver.find_element_by_xpath(".//*[contains(@class,'znxt') and not(contains(@class,'js-disabled'))]").is_displayed():
-    driver.find_element_by_css_selector(".znxt").click()
-    time.sleep(1)
-    driver.switch_to.default_content()
-    get_comments()
-driver.quit()
+# driver = webdriver.Chrome('chromedriver.exe')
+# driver.get("https://music.163.com/#/song?id=548808659")
+# def get_comments():
+#     driver.switch_to.frame(0)  # contentFrame
+#     """页面下拉"""
+#     js = "document.documentElement.scrollTop = document.documentElement.scrollHeight"
+#     driver.execute_script(js)
+#     """解析数据"""
+#     divs = driver.find_elements_by_css_selector('.itm')
+#     for div in divs:
+#         cnt = div.find_element_by_css_selector('.cnt.f-brk').text.replace('\n',' ')
+#         cnt = re.findall('：(.*)',cnt)[0]
+#         print(cnt)
+#         # 数据保存
+#         with open('评论.txt',mode='a',encoding='utf-8') as f:
+#             f.write(cnt + '\n')
+#
+#
+# get_comments()
+# """点击下一页"""
+# while driver.find_element_by_xpath(".//*[contains(@class,'znxt') and not(contains(@class,'js-disabled'))]").is_displayed():
+#     driver.find_element_by_css_selector(".znxt").click()
+#     time.sleep(1)
+#     driver.switch_to.default_content()
+#     get_comments()
+# driver.quit()
 
 
 img = imageio.imread('logo.jpg')
