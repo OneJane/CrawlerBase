@@ -6,7 +6,7 @@ import requests
 for page in range(1,3466):
     print('==============正在爬去第{}页数据==================='.format(page))
     base_url = 'https://www.doutula.com/photo/list/?page={}'.format(page)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36'}
     response = requests.get(url=base_url,headers=headers)
     html_data=response.text
 
