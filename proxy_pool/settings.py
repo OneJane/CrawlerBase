@@ -23,7 +23,7 @@ PROXIES_SPIDERS = [
     'core.proxy_spider.proxy_spiders.Ip3366Spider',
     'core.proxy_spider.proxy_spiders.KaiSpider',
     'core.proxy_spider.proxy_spiders.ProxylistplusSpider',
-    'core.proxy_spider.proxy_spiders.XiciSpider',
+    # 'core.proxy_spider.proxy_spiders.XiciSpider',
 ]
 
 # 4.3.1 修改配置文件, 增加爬虫运行时间间隔的配置, 单位为小时
