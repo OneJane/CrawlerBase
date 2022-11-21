@@ -82,14 +82,14 @@ def run(hexin_v):
         except Exception as e:
              print(e)
     res_list = [i for i in res_list if
-                (float(i["竞价量"]) * float(i["竞价换手率"]) / float(i["昨日成交量"])) > 0.01 and float(i["竞价换手率"]) < 2]
+                (float(i["竞价量"]) * float(i["竞价换手率"]) / float(i["昨日成交量"])) > 0.01 and i['竞价涨幅']<9]
     # res_list.sort(key=lambda x: (x['竞价换手率']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]),
     #               reverse=True)
     # res_list.sort(key=lambda x: (x['竞价换手率']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]),
     #               reverse=True)
     # res_list.sort(key=lambda x: (x['竞价换手率']*x["竞价量比"]*x["竞价额"]),
     #               reverse=True)
-    res_list.sort(key=lambda x: (x['竞价额']*x["竞价量比"]*x["竞价换手率"]*x["昨日成交量"]/x["竞价量"]),
+    res_list.sort(key=lambda x: (x['竞价额']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]/x["竞价换手率"]),
                   reverse=True)
     print(json.dumps(res_list, indent=2, ensure_ascii=False))
 
