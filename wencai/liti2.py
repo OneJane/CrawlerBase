@@ -383,20 +383,20 @@ if __name__ == '__main__':
 "2022年11月18日_上市天数，2022年11月18日竞价实际换手率大于1%，2022年11月18日竞价涨幅，2022年11月17日成交量，2022年11月18日竞价换手率，2022年11月18日竞价量比，主板，2022年11月18日竞价额，2022年11月18日涨跌幅排序，非st，2022年11月18日竞价量",
 "2022年11月21日_上市天数，2022年11月21日竞价实际换手率大于1%，2022年11月21日竞价涨幅，2022年11月18日成交量，2022年11月21日竞价换手率，2022年11月21日竞价量比，主板，2022年11月21日竞价额，2022年11月21日涨跌幅排序，非st，2022年11月21日竞价量",
 "2022年11月22日_上市天数，2022年11月22日竞价实际换手率大于1%，2022年11月22日竞价涨幅，2022年11月21日成交量，2022年11月22日竞价换手率，2022年11月22日竞价量比，主板，2022年11月22日竞价额，2022年11月22日涨跌幅排序，非st，2022年11月22日竞价量"]
-    for i in ques_list:
-        main(i)
+    # for i in ques_list:
+    #     main(i)
     # main(random.choice(ques_list))
     # main(ques_list[-1])
-    # file_object1 = open("liti7.txt", 'r', encoding='UTF-8')
-    # try:
-    #     while True:
-    #         line = file_object1.readline()
-    #         if line:
-    #             final_res_list.append(line)
-    #         else:
-    #             break
-    # finally:
-    #     file_object1.close()
+    file_object1 = open("liti7.txt", 'r', encoding='UTF-8')
+    try:
+        while True:
+            line = file_object1.readline()
+            if line:
+                final_res_list.append(line)
+            else:
+                break
+    finally:
+        file_object1.close()
     # #
     # # y_list = []
     # # s_list = []
@@ -404,15 +404,15 @@ if __name__ == '__main__':
     # print(len(final_res_list))
     # a =[]
     # b=[]
-    # for i in final_res_list:
-    #     data_list = eval(i.strip())
-    #     # at_list = list(filter(at, data_list))
+    for i in final_res_list:
+        data_list = eval(i.strip())
+        # at_list = list(filter(at, data_list))
     #     # at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅']<8
     #     #            and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] #106 72
-    #     at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] >1 and d['竞价涨幅'] <8
-    #                and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] # 107 71
+        at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] >1 and d['竞价涨幅'] <8
+                   and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] # 107 71
     #
-    #     at_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"]/x["竞价换手率"]), reverse=True) # 104 74
+        at_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"]/x["竞价换手率"]), reverse=True) # 104 74
         # for a in at_list:
         #     a['竞价量比*竞价量/昨日成交量/竞价换手率']= a["竞价量比"]*a["竞价量"] / a["昨日成交量"]/a['竞价换手率']
         #     a['竞价量比*昨日成交量/竞价量/竞价换手率']= a["竞价量比"]*a["昨日成交量"] / a["竞价量"]/a['竞价换手率']
@@ -424,11 +424,11 @@ if __name__ == '__main__':
         # at_list.sort(key=lambda x: (x["竞价量比"] * x["竞价换手率"]), reverse=True) # 87 90
         # at_list.sort(key=lambda x: (x["竞价换手率"]),  reverse=True) # 97 85
         # at_list.sort(key=lambda x: (x["竞价换手率"]), reverse=True) # 97 85
-        # if len(at_list)>0:
-        #     if at_list[0]['当日涨幅']>9:
-        #         print("++"+str(at_list))
-        #     else:
-        #         print("--"+str(at_list))
+        if len(at_list)>0:
+            if at_list[0]['当日涨幅']>9:
+                print("++"+str(at_list))
+            else:
+                print("--"+str(at_list))
         # for d in at_list:
             #print(d)
             # if (d["竞价量"] * d["竞价换手率"] / d["昨日成交量"]) > 0.01:
