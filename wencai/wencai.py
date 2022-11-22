@@ -81,8 +81,9 @@ def run(hexin_v):
                 res_list.append(wencai)
         except Exception as e:
              print(e)
-    res_list = [i for i in res_list if
-                (float(i["竞价量"]) * float(i["竞价换手率"]) / float(i["昨日成交量"])) > 0.01 and i['竞价涨幅']<9]
+    # res_list = [i for i in res_list if (float(i["竞价量"]) * float(i["竞价换手率"]) / float(i["昨日成交量"])) > 0.01 and i['竞价涨幅']<9]
+    res_list = [d for d in res_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] > 1 and d['竞价涨幅'] < 8
+               and d['竞价量比'] / d['竞价换手率'] * d['竞价量'] / d['昨日成交量'] < 1000]
     # res_list.sort(key=lambda x: (x['竞价换手率']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]),
     #               reverse=True)
     # res_list.sort(key=lambda x: (x['竞价换手率']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]),
