@@ -145,13 +145,14 @@ def main(quest):
     hexin_v = get_hexin_v(sever_time)
     return run(quest, hexin_v)
 
-
 if __name__ == '__main__':
     final_res_list = []
+    zt_list = []
+    nt_list = []
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
     }
-    file_object1 = open("liti7.txt", 'r', encoding='UTF-8')
+    file_object1 = open("liti8.txt", 'r', encoding='UTF-8')
     try:
         while True:
             line = file_object1.readline()
@@ -165,33 +166,62 @@ if __name__ == '__main__':
 
         data_list = eval(i.strip())
         at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] > 1 and d['竞价涨幅'] < 8
-                   and d['竞价量比'] / d['竞价换手率'] * d['竞价量'] / d['昨日成交量'] < 1000]
-        at_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"] / x["竞价换手率"]), reverse=True)  # 104 74
+                   and d['竞价量比'] / d['竞价换手率'] * d['竞价量'] / d['昨日成交量'] < 1000  and d["竞价换手率"]>0.5
+                   and d['竞价未匹配金额']<20000000
+                   and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
+                   and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
+                    and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3 ]
 
-        a_list = []
-        if len(at_list) > 0:
-            # if at_list[0]['当日涨幅']<9:
-            # print(json.dumps(at_list, indent=2, ensure_ascii=False))
-            h_list = []
+        at_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"] / x["竞价换手率"]), reverse=True)  # 113 67
+        # at_list.sort(key=lambda d: (d['竞价换手率']/d['昨日换手率']), reverse=True)  # 113 67
+
+        if len(at_list)>0:
+            if at_list[0]['当日涨幅']<9:
+                print("--"+json.dumps(at_list, ensure_ascii=False))
+            else:
+                print("++" + json.dumps(at_list, ensure_ascii=False))
+
+        # 竞价换手率 竞价量比 竞价额 竞价涨幅 竞价量 昨日成交量 当日涨幅 昨日封单量 昨日涨跌幅 昨日成交额 昨日换手率
+        # d['竞价量']/d['昨日封单量']*d['昨日换手率']
+        # and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3
+
+        for d in at_list:
             try:
-                h_list = main(at_list[0]['昨日'].replace('-', '年', 1).replace('-', '月', 1) + "日" + ','.join(
-                    [d['名称'] for d in at_list]) + "换手率,封单量，涨跌幅，成交额")
-                print()
+                if d['当日涨幅']>9:
+                    zt_list.append( d['竞价额']/d['昨日成交额']*d['竞价量比'])
+                else:
+                    nt_list.append(d['竞价额']/d['昨日成交额']*d['竞价量比'] )
             except Exception as e:
-                print(at_list)
-            # print(h_list)
-            for d in at_list:
-                mc = d['名称']
-                if h_list is not None and len(h_list) > 0:
-                    for f in h_list:
-                        if f['名称'] == d['名称']:
-                            d['昨日封单量'] = f['昨日封单量']
-                            d['昨日涨跌幅'] = f['昨日涨跌幅']
-                            d['昨日成交额'] = f['昨日成交额']
-                            d['昨日换手率'] = f['昨日换手率']
-                            a_list.append(d)
-            file = codecs.open('liti8.txt', 'a', 'utf-8')
-            file.writelines(str(a_list) + "\n")
+                print(json.dumps(d, ensure_ascii=False))
+    zt_list.sort()
+    nt_list.sort()
+    print(zt_list)
+    print(nt_list)
+
+        # a_list = []
+        # if len(at_list) > 0:
+        #     # if at_list[0]['当日涨幅']<9:
+        #     # print(json.dumps(at_list, indent=2, ensure_ascii=False))
+        #     h_list = []
+        #     try:
+        #         h_list = main(at_list[0]['昨日'].replace('-', '年', 1).replace('-', '月', 1) + "日" + ','.join(
+        #             [d['名称'] for d in at_list]) + "换手率,封单量，涨跌幅，成交额")
+        #         print()
+        #     except Exception as e:
+        #         print(at_list)
+        #     # print(h_list)
+        #     for d in at_list:
+        #         mc = d['名称']
+        #         if h_list is not None and len(h_list) > 0:
+        #             for f in h_list:
+        #                 if f['名称'] == d['名称']:
+        #                     d['昨日封单量'] = f['昨日封单量']
+        #                     d['昨日涨跌幅'] = f['昨日涨跌幅']
+        #                     d['昨日成交额'] = f['昨日成交额']
+        #                     d['昨日换手率'] = f['昨日换手率']
+        #                     a_list.append(d)
+        #     file = codecs.open('liti8.txt', 'a', 'utf-8')
+        #     file.writelines(str(a_list) + "\n")
 
         # if len(at_list)>0:
         #     if at_list[0]['当日涨幅']>9:
