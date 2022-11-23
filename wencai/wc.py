@@ -87,7 +87,7 @@ def run(hexin_v):
     print(json.dumps(res_list, indent=2, ensure_ascii=False))
     h_list = []
     if len(res_list)>0:
-        q = ','.join([d['名称'] for d in res_list]) + "昨日的换手率,封单量，涨跌幅，成交额"
+        q = ','.join([d['名称'] for d in res_list]) + "昨日的换手率,封单量，涨跌幅，成交额，竞价未匹配金额"
         data = {
             "question": q,
             "perpage": 50,
@@ -109,6 +109,7 @@ def run(hexin_v):
             ztfdl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][1]["data"]["datas"]
             zdf_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][2]["data"]["datas"]
             cje_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][3]["data"]["datas"]
+            jjwpp_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][4]["data"]["datas"]
             h_list = []
             if len(hsl_list) > 0:
                 for origin_res in hsl_list:
@@ -135,16 +136,35 @@ def run(hexin_v):
                         if z['名称'] == wencai['名称']:
                             if '成交额' in z.keys():
                                 wencai['昨日成交额'] = float(z['成交额'])
+                    for z in jjwpp_list:
+                        if z['名称'] == wencai['名称']:
+                            if '成交额' in z.keys():
+                                wencai['竞价未匹配金额'] = float(z['竞价未匹配金额'])
                     h_list.append(wencai)
-        for d in res_list:
-            if h_list is not None and len(h_list) > 0:
-                for f in h_list:
+        elif show_type == '901':
+            hsl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"]
+            for h in hsl_list:
+                wencai = {}
+                wencai['名称'] = h["名称"]
+                wencai['昨日换手率'] = float(h["换手率"])
+                wencai['昨日涨跌幅'] = float(h["涨跌幅:前复权"])
+                if wencai['昨日涨跌幅']>9 and h["涨停封单量"] != '暂无':
+                    wencai['昨日封单量'] = float(h["涨停封单量"])
+                    wencai['昨日成交额'] = float(h["成交额"])
+                    wencai['竞价未匹配金额'] = float(h["竞价未匹配金额"])
+                    h_list.append(wencai)
+        if h_list is not None and len(h_list) > 0:
+            for d in h_list:
+                for f in res_list:
                     if f['名称'] == d['名称']:
-                        d['昨日封单量'] = f['昨日封单量']
-                        d['昨日涨跌幅'] = f['昨日涨跌幅']
-                        d['昨日成交额'] = f['昨日成交额']
-                        d['昨日换手率'] = f['昨日换手率']
+                        d['竞价量比'] = f['竞价量比']
+                        d['竞价量'] = f['竞价量']
+                        d['竞价额'] = f['竞价额']
         print("===================================")
+        res_list = [d for d in h_list if d['竞价未匹配金额']<20000000
+                   and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
+                   and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
+                    and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3 ]
         print(json.dumps(res_list, indent=2, ensure_ascii=False))
 
 
