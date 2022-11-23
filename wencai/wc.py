@@ -138,7 +138,7 @@ def run(hexin_v):
                                 wencai['昨日成交额'] = float(z['成交额'])
                     for z in jjwpp_list:
                         if z['名称'] == wencai['名称']:
-                            if '成交额' in z.keys():
+                            if '竞价未匹配金额' in z.keys():
                                 wencai['竞价未匹配金额'] = float(z['竞价未匹配金额'])
                     h_list.append(wencai)
         elif show_type == '901':
@@ -160,11 +160,15 @@ def run(hexin_v):
                         d['竞价量比'] = f['竞价量比']
                         d['竞价量'] = f['竞价量']
                         d['竞价额'] = f['竞价额']
+                        d['竞价换手率'] = f['竞价换手率']
+                        d['昨日成交量'] = f['昨日成交量']
         print("===================================")
         res_list = [d for d in h_list if d['竞价未匹配金额']<20000000
                    and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
                    and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
                     and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3 ]
+        res_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"] / x["竞价换手率"]),
+                      reverse=True)
         print(json.dumps(res_list, indent=2, ensure_ascii=False))
 
 
