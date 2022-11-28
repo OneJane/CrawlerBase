@@ -185,18 +185,18 @@ if __name__ == '__main__':
         # d['竞价量']/d['昨日封单量']*d['昨日换手率']
         # and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3
 
-        for d in at_list:
-            try:
-                if d['当日涨幅']>9:
-                    zt_list.append( d['竞价额']/d['昨日成交额']*d['竞价量比'])
-                else:
-                    nt_list.append(d['竞价额']/d['昨日成交额']*d['竞价量比'] )
-            except Exception as e:
-                print(json.dumps(d, ensure_ascii=False))
-    zt_list.sort()
-    nt_list.sort()
-    print(zt_list)
-    print(nt_list)
+    #     for d in at_list:
+    #         try:
+    #             if d['当日涨幅']>9:
+    #                 zt_list.append( d['竞价额']/d['昨日成交额']*d['竞价量比'])
+    #             else:
+    #                 nt_list.append(d['竞价额']/d['昨日成交额']*d['竞价量比'] )
+    #         except Exception as e:
+    #             print(json.dumps(d, ensure_ascii=False))
+    # zt_list.sort()
+    # nt_list.sort()
+    # print(zt_list)
+    # print(nt_list)
 
         # a_list = []
         # if len(at_list) > 0:

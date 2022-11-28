@@ -387,7 +387,7 @@ if __name__ == '__main__':
     #     main(i)
     # main(random.choice(ques_list))
     # main(ques_list[-1])
-    file_object1 = open("liti7.txt", 'r', encoding='UTF-8')
+    file_object1 = open("liti8.txt", 'r', encoding='UTF-8')
     try:
         while True:
             line = file_object1.readline()
@@ -398,8 +398,8 @@ if __name__ == '__main__':
     finally:
         file_object1.close()
     # #
-    # # y_list = []
-    # # s_list = []
+    y_list = []
+    s_list = []
     # # count = 0
     # print(len(final_res_list))
     # a =[]
@@ -409,10 +409,17 @@ if __name__ == '__main__':
         # at_list = list(filter(at, data_list))
     #     # at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅']<8
     #     #            and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] #106 72
-        at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] >1 and d['竞价涨幅'] <8
-                   and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] # 107 71
+    #     at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] >1 and d['竞价涨幅'] <8
+    #                and d['竞价量比']/d['竞价换手率']*d['竞价量']/d['昨日成交量']<1000] # 107 71
+        at_list = [d for d in data_list if d['竞价未匹配金额']<20000000
+                   and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
+                   and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
+                    and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3
+                   and d['竞价换手率']*d['昨日换手率']
+                   # and d['竞价额']/d["昨日成交额"]>0.3
+                   ]
     #
-        at_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"]/x["竞价换手率"]), reverse=True) # 104 74
+        at_list.sort(key=lambda d: (d['竞价额'] * d["竞价量比"] * d["昨日成交量"] / d["竞价量"]/d["竞价换手率"]), reverse=True) # 104 74
         # for a in at_list:
         #     a['竞价量比*竞价量/昨日成交量/竞价换手率']= a["竞价量比"]*a["竞价量"] / a["昨日成交量"]/a['竞价换手率']
         #     a['竞价量比*昨日成交量/竞价量/竞价换手率']= a["竞价量比"]*a["昨日成交量"] / a["竞价量"]/a['竞价换手率']
@@ -424,11 +431,32 @@ if __name__ == '__main__':
         # at_list.sort(key=lambda x: (x["竞价量比"] * x["竞价换手率"]), reverse=True) # 87 90
         # at_list.sort(key=lambda x: (x["竞价换手率"]),  reverse=True) # 97 85
         # at_list.sort(key=lambda x: (x["竞价换手率"]), reverse=True) # 97 85
+
+        # 竞价换手率 竞价量比 竞价额 竞价涨幅 竞价量 昨日成交量 当日涨幅 昨日封单量 昨日涨跌幅 昨日成交额 昨日换手率
+
         if len(at_list)>0:
+            d=at_list[0]
             if at_list[0]['当日涨幅']>9:
-                print("++"+str(at_list))
+                y_list.append(d["竞价量比"]*d['竞价换手率'])
+
+            # print("++" + json.dumps(at_list[0], ensure_ascii=False))
             else:
-                print("--"+str(at_list))
+                s_list.append(d["竞价量比"]*d['竞价换手率'])
+
+        # print("--" + json.dumps(at_list[0], ensure_ascii=False))
+
+
+        # for d in at_list:
+        #     if d['当日涨幅']>9:
+        #         y_list.append(d['昨日成交量']/d["竞价量"]/d["竞价量比"]*d['竞价涨幅'])
+        #             # print("++"+str(at_list))
+        #             # print("++"+json.dumps(at_list,  ensure_ascii=False))
+        #     else:
+        #         s_list.append(d['昨日成交量']/d["竞价量"]/d["竞价量比"]*d['竞价涨幅'])
+
+                    # print("--"+str(at_list))
+                    # print("--"+json.dumps(at_list,  ensure_ascii=False))
+
         # for d in at_list:
             #print(d)
             # if (d["竞价量"] * d["竞价换手率"] / d["昨日成交量"]) > 0.01:
@@ -441,10 +469,10 @@ if __name__ == '__main__':
             # else:
             #     b.append(d['竞价量比']/d['竞价换手率']*d['昨日成交量']/d['竞价量'])
 
-    # a.sort()
-    # b.sort()
-    # print(a)
-    # print(b)
+    y_list.sort()
+    s_list.sort()
+    print(y_list)
+    print(s_list)
         # data_list.sort(key=lambda x: (float(x["当日涨幅"])),reverse=True)
         # if data_list[0]['当日涨幅']<9:
         #     print(data_list)
