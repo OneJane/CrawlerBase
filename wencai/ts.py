@@ -172,6 +172,8 @@ if __name__ == '__main__':
                    and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
                     and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3
                    and d["竞价量比"]*d['竞价涨幅']*d['竞价换手率']/d['昨日换手率']>0.6
+                    and d['竞价量']/ d['昨日封单量']*d['竞价量比']>3
+                   and d['竞价量']/d['昨日封单量']*d['昨日换手率']/d['竞价涨幅']>0.06
                    ]
 
         at_list.sort(key=lambda d: (d['竞价额'] * d["竞价量比"] * d["昨日成交量"] / d["竞价量"] / d["竞价换手率"]), reverse=True)  # 113 67
@@ -190,9 +192,9 @@ if __name__ == '__main__':
         for d in at_list:
             try:
                 if d['当日涨幅']>9:
-                    zt_list.append(d["竞价量比"]*d['竞价涨幅']*d['竞价换手率']/d['昨日换手率'])
+                    zt_list.append(d['竞价量']/d['昨日封单量']*d['昨日换手率']/d['竞价涨幅'])
                 else:
-                    nt_list.append(d["竞价量比"]*d['竞价涨幅']*d['竞价换手率']/d['昨日换手率'])
+                    nt_list.append( d['竞价量']/d['昨日封单量']*d['昨日换手率']/d['竞价涨幅'])
             except Exception as e:
                 print(json.dumps(d, ensure_ascii=False))
     zt_list.sort()
