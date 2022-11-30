@@ -175,10 +175,11 @@ if __name__ == '__main__':
                     and d['竞价量']/ d['昨日封单量']*d['竞价量比']>3
                    and d['竞价量']/d['昨日封单量']*d['昨日换手率']/d['竞价涨幅']>0.06
                    and d['昨日成交量']/d['竞价量']*d['竞价换手率']*d['竞价涨幅']>5
-                   and d['竞价量']/d['昨日封单量']<2.5
+                   and d['竞价量']/d['昨日封单量']<2
                    ]
 
         at_list.sort(key=lambda d: (d['竞价额'] * d["竞价量比"] * d["昨日成交量"] / d["竞价量"] / d["竞价换手率"]), reverse=True)  # 113 67
+        # at_list.sort(key=lambda d: (d['昨日换手率']/d['昨日成交额']*d['竞价额'] * d["竞价量比"]/d["竞价换手率"]), reverse=True)  # 113 67
         # at_list.sort(key=lambda d: (d['竞价换手率']/d['昨日换手率']), reverse=True)  # 113 67
 
         if len(at_list)>0:
@@ -194,9 +195,9 @@ if __name__ == '__main__':
         if len(at_list)>0:
             d=at_list[0]
             if at_list[0]['当日涨幅']>9:
-                zt_list.append(d['昨日换手率']/d['昨日封单量']*d['昨日成交量'])
+                zt_list.append(d['昨日换手率']/d['昨日成交额']*d['竞价额'])
             else:
-                nt_list.append(d['昨日换手率']/d['昨日封单量']*d['昨日成交量'])
+                nt_list.append(d['昨日换手率']/d['昨日成交额']*d['竞价额'])
         # for d in at_list:
         #     try:
         #         if d['当日涨幅']>9:
