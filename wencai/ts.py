@@ -1,4 +1,5 @@
 import codecs
+import datetime
 import json
 import re
 import time
@@ -168,7 +169,8 @@ if __name__ == '__main__':
         at_list = [d for d in data_list if d["竞价量"] * d["竞价换手率"] / d["昨日成交量"] > 0.01 and d['竞价涨幅'] > 1 and d['竞价涨幅'] < 8
                    and d['竞价量比'] / d['竞价换手率'] * d['竞价量'] / d['昨日成交量'] < 1000  and d["竞价换手率"]>0.5
                    and d['竞价未匹配金额']<20000000
-                   and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
+                   and d['竞价未匹配金额'] > -10000000
+                   and d['昨日涨跌幅']>9 and d['昨日换手率']>1
                    and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
                     and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3
                    and d["竞价量比"]*d['竞价涨幅']*d['竞价换手率']/d['昨日换手率']>0.6
@@ -181,7 +183,7 @@ if __name__ == '__main__':
         at_list.sort(key=lambda d: (d['竞价额'] * d["竞价量比"] * d["昨日成交量"] / d["竞价量"] / d["竞价换手率"]), reverse=True)  # 113 67
         # at_list.sort(key=lambda d: (d['昨日换手率']/d['昨日成交额']*d['竞价额'] * d["竞价量比"]/d["竞价换手率"]), reverse=True)  # 113 67
         # at_list.sort(key=lambda d: (d['竞价换手率']/d['昨日换手率']), reverse=True)  # 113 67
-
+        week_list = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
         if len(at_list)>0:
             if at_list[0]['当日涨幅']<9:
                 print("--"+json.dumps(at_list, ensure_ascii=False))
@@ -195,9 +197,9 @@ if __name__ == '__main__':
         if len(at_list)>0:
             d=at_list[0]
             if at_list[0]['当日涨幅']>9:
-                zt_list.append(d['昨日换手率']/d['昨日成交额']*d['竞价额'])
+                zt_list.append(d['竞价未匹配金额'])
             else:
-                nt_list.append(d['昨日换手率']/d['昨日成交额']*d['竞价额'])
+                nt_list.append(d['竞价未匹配金额'])
         # for d in at_list:
         #     try:
         #         if d['当日涨幅']>9:

@@ -1,3 +1,4 @@
+import datetime
 from functools import partial
 import subprocess
 
@@ -170,9 +171,10 @@ def run(hexin_v):
                         d['昨日成交量'] = f['昨日成交量']
                         d['当日涨幅'] = f['当日涨幅']
                         d['竞价涨幅'] = f['竞价涨幅']
+                        d['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')
         print("===================================")
         res_list = [d for d in h_list if d['竞价未匹配金额']<20000000
-                   and d['昨日涨跌幅']>9 and d['昨日换手率']>0.5
+                   and d['昨日涨跌幅']>9 and d['昨日换手率']>1
                    and d['竞价量']/d['昨日封单量']*d['竞价量比']>2 and d['竞价量']/d['昨日封单量']>0.1 and d['竞价量']/d['昨日封单量']*d['昨日换手率']<100
                     and d['竞价额']/d['昨日成交额']*d['竞价量比']>0.3 and d['基本面评分']>5
                     and d["竞价量比"]*d['竞价涨幅']*d['竞价换手率']/d['昨日换手率']>0.6
