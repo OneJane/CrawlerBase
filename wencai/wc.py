@@ -104,63 +104,78 @@ def run(hexin_v):
         }
         res = requests.post(url, headers=new_headers, data=json.dumps(data))
         try:
-            show_type = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["show_type_id"]
-            if show_type == '101':
+            show_type = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["show_type"]
+            if show_type == 'bar3':
                 # 分开
-                hsl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"]
+                jjwpp_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"]
                 ztfdl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][1]["data"]["datas"]
-                zdf_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][2]["data"]["datas"]
-                cje_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][3]["data"]["datas"]
-                jjwpp_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][4]["data"]["datas"]
-                jbmpf_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][5]["data"]["datas"]
                 h_list = []
-                if len(hsl_list) > 0:
-                    for origin_res in hsl_list:
-                        res_json = json.loads(json.dumps(origin_res, ensure_ascii=False))
-                        wencai = {}
-                        wencai['名称'] = res_json["名称"]
-                        wencai['昨日换手率'] = float(res_json["换手率"])
-
-                        for z in ztfdl_list:
-                            if z['名称'] == wencai['名称']:
-                                if '涨停封单量' in z.keys():
-                                    if z['涨停封单量'] == '暂无':
-                                        wencai['昨日封单量'] = 0
-                                    else:
-                                        wencai['昨日封单量'] = float(z['涨停封单量'])
-                                else:
-                                    wencai['昨日封单量'] = 0
-
-                        for z in zdf_list:
-                            if z['名称'] == wencai['名称']:
-                                if '涨跌幅:前复权' in z.keys():
-                                    wencai['昨日涨跌幅'] = float(z['涨跌幅:前复权'])
-                        for z in cje_list:
-                            if z['名称'] == wencai['名称']:
-                                if '成交额' in z.keys():
-                                    wencai['昨日成交额'] = float(z['成交额'])
-                        for z in jjwpp_list:
-                            if z['名称'] == wencai['名称']:
-                                if '竞价未匹配金额' in z.keys():
-                                    wencai['竞价未匹配金额'] = float(z['竞价未匹配金额'])
-                        for z in jbmpf_list:
-                            if z['名称'] == wencai['名称']:
-                                if '基本面评分' in z.keys():
-                                    wencai['基本面评分'] = float(z['基本面评分'])
-                        h_list.append(wencai)
-            elif show_type == '901':
-                hsl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"]
-                for h in hsl_list:
+                for h in ztfdl_list:
                     wencai = {}
                     wencai['名称'] = h["名称"]
                     wencai['昨日换手率'] = float(h["换手率"])
                     wencai['昨日涨跌幅'] = float(h["涨跌幅:前复权"])
-                    if wencai['昨日涨跌幅']>9 and h["涨停封单量"] != '暂无':
+                    if wencai['昨日涨跌幅'] > 9 and h["涨停封单量"] != '暂无':
                         wencai['昨日封单量'] = float(h["涨停封单量"])
                         wencai['昨日成交额'] = float(h["成交额"])
-                        wencai['竞价未匹配金额'] = float(h["竞价未匹配金额"])
                         wencai['基本面评分'] = float(h["基本面评分"])
                         h_list.append(wencai)
+                for h in h_list:
+                    for j in jjwpp_list:
+                        if h["名称"] == j["名称"]:
+                            h['竞价未匹配金额'] = j['竞价未匹配金额']
+
+
+            elif show_type == 'tab4':
+                hsl_list = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["tab_list"]
+                for r in res_list:
+                    wencai = {}
+
+                    for h in hsl_list:
+
+                        if h['tab_name'] == "竞价未匹配金额":
+                            for l in h['list'][0]['data']['datas']:
+                                if l['名称'] == r['名称']:
+                                    wencai['名称'] = l["名称"]
+                                    wencai['竞价未匹配金额'] = float(l["竞价未匹配金额"])
+
+                        if h['tab_name'] == "换手率":
+                            for l in h['list'][0]['data']['datas']:
+                                if l['名称'] == r['名称']:
+                                    wencai['名称'] = l["名称"]
+                                    wencai['昨日换手率'] = float(l["换手率"])
+
+                        if h['tab_name'] == "涨跌幅:前复权":
+                            for l in h['list'][0]['data']['datas']:
+                                if l['名称'] == r['名称']:
+                                    wencai['名称'] = l["名称"]
+                                    wencai['昨日涨跌幅'] = float(l["涨跌幅:前复权"])
+
+                        if h['tab_name'] == "涨跌幅:前复权":
+                            for l in h['list'][0]['data']['datas']:
+                                if l['名称'] == r['名称']:
+                                    wencai['名称'] = l["名称"]
+                                    wencai['昨日涨跌幅'] = float(l["涨跌幅:前复权"])
+
+                        if h['tab_name'] == "基本面评分":
+                            for l in h['list'][0]['data']['datas']:
+                                if l['名称'] == r['名称']:
+                                    wencai['名称'] = l["名称"]
+                                    wencai['基本面评分'] = float(l["基本面评分"])
+                    h_list.append(wencai)
+                for w in h_list:
+                    if w['昨日涨跌幅'] > 9:
+                        for h in hsl_list:
+                            if h['tab_name'] == "涨停封单量":
+                                for l in h['list'][0]['data']['datas']:
+                                    if l['名称'] == w['名称']:
+                                        w['名称'] = l["名称"]
+                                        w['昨日封单量'] = float(l["涨停封单量"])
+                            if h['tab_name'] == "成交额":
+                                for l in h['list'][0]['data']['datas']:
+                                    if l['名称'] == w['名称']:
+                                        w['名称'] = l["名称"]
+                                        w['昨日成交额'] = float(l["成交额"])
         except Exception as e:
             res = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][1]['data']['datas'][0]
             print(json.dumps(res, indent=2, ensure_ascii=False))
