@@ -8,6 +8,8 @@ import requests
 import re
 import json
 
+from flask import Flask
+app = Flask(__name__)
 ques = "上市天数，今日竞价实际换手率大于1%，今日竞价涨幅，昨日成交量，今日竞价换手率，今日竞价量比，去除今日开盘价等于涨停价，主板，今日竞价额，今日涨跌幅排序"
 
 
@@ -219,6 +221,7 @@ def run(hexin_v):
         res_list.sort(key=lambda x: (x['竞价额'] * x["竞价量比"] * x["昨日成交量"] / x["竞价量"] / x["竞价换手率"]),
                       reverse=True)
         print(json.dumps(res_list, indent=2, ensure_ascii=False))
+        return json.dumps(res_list, indent=2, ensure_ascii=False)
 
 
 def sortByKey(dictVar):
@@ -228,11 +231,12 @@ def sortByKey(dictVar):
         sortedDict[tupleItem[0]] = tupleItem[1]
     return sortedDict
 
-
+@app.route('/')
 def main():
     sever_time = get_TOKEN_SERVER_TIME()
     hexin_v = get_hexin_v(sever_time)
     return run(hexin_v)
+
 
 
 if __name__ == '__main__':
@@ -240,6 +244,7 @@ if __name__ == '__main__':
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
     }
     a_list = main()
+    app.run()
     # res = [
     #       {
     #         "名称": "安奈儿",
