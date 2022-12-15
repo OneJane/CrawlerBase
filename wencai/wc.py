@@ -87,7 +87,7 @@ def run(hexin_v):
                and d['竞价量比'] / d['竞价换手率'] * d['竞价量'] / d['昨日成交量'] < 1000 and d['竞价换手率']>0.5]
     res_list.sort(key=lambda x: (x['竞价额']*x["竞价量比"]*x["昨日成交量"]/x["竞价量"]/x["竞价换手率"]),
                   reverse=True)
-    print(json.dumps(res_list, indent=2, ensure_ascii=False))
+    # print(json.dumps(res_list, indent=2, ensure_ascii=False))
     h_list = []
     if len(res_list)>0:
         q = ','.join([d['名称'] for d in res_list]) + "竞价未匹配金额，昨日的换手率,封单量，涨跌幅，成交额，基本面评分"
@@ -180,7 +180,7 @@ def run(hexin_v):
                                         w['昨日成交额'] = float(l["成交额"])
         except Exception as e:
             res = res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][1]['data']['datas'][0]
-            print(json.dumps(res, indent=2, ensure_ascii=False))
+            # print(json.dumps(res, indent=2, ensure_ascii=False))
             wencai = {}
             wencai['名称'] = res["股票简称"]
             wencai['昨日换手率'] = float(0)
@@ -205,7 +205,7 @@ def run(hexin_v):
                         d['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')
 
         print("============================================")
-        print(json.dumps(h_list, indent=2, ensure_ascii=False))
+        # print(json.dumps(h_list, indent=2, ensure_ascii=False))
         print("============================================")
         res_list = [d for d in h_list if  d['竞价未匹配金额']<20000000
                    and d['竞价未匹配金额'] > -10000000
@@ -244,7 +244,7 @@ if __name__ == '__main__':
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
     }
     a_list = main()
-    app.run()
+    app.run(host="0.0.0.0", debug=True)
     # res = [
     #       {
     #         "名称": "安奈儿",
