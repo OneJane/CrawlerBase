@@ -244,6 +244,10 @@ if __name__ == '__main__':
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
     }
     a_list = main()
+    import win32api, win32gui
+    ct = win32api.GetConsoleTitle()
+    hd = win32gui.FindWindow(0, ct)
+    win32gui.ShowWindow(hd, 0)  # 隐藏dos窗
     app.run(host="0.0.0.0", debug=True)
     # res = [
     #       {
